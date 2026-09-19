@@ -9,7 +9,7 @@ Interactive study website for the **ISC2 CC (Certified in Cybersecurity)** exam.
 - **Quiz mode** — instant answer feedback with explanations, score summary
 - **Glossary** — 144 terms with live search
 - **Case study** — 10-part JavaSip story mapped to security concepts
-- **Light/dark mode toggle** with React Bits-inspired animations
+- **Light/dark mode toggle** (follows device theme) with React Bits-inspired animations
 
 ## Run it
 
