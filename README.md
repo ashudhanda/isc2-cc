@@ -16,3 +16,13 @@ Interactive study website for the **ISC2 CC (Certified in Cybersecurity)** exam.
 Open `index.html` in any browser — it's a single self-contained file, works offline.
 
 Or enable GitHub Pages: Settings → Pages → Deploy from branch → `main` → `/ (root)`.
+
+## Keyboard shortcuts
+
+In flashcards view:
+
+- **← / →** — previous / next card
+- **Space** — flip the current card
+- **Enter** — flip the card when it has focus
+
+Shortcuts are ignored while typing in a text field (e.g. glossary search), so typing never flips or changes cards by accident.
