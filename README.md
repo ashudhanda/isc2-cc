@@ -13,7 +13,7 @@ Interactive study website for the **ISC2 CC (Certified in Cybersecurity)** exam.
 
 ## Run it
 
-Open `index.html` in any browser — it's a single self-contained file, works offline.
+Open `index.html` in any browser — it's a single self-contained file, works offline. (The page loads DM Sans / Manrope from Google Fonts when online; without a connection it silently falls back to system fonts.)
 
 Or enable GitHub Pages: Settings → Pages → Deploy from branch → `main` → `/ (root)`.
 
