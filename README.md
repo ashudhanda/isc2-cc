@@ -26,3 +26,10 @@ In flashcards view:
 - **Enter** — flip the card when it has focus
 
 Shortcuts are ignored while typing in a text field (e.g. glossary search), so typing never flips or changes cards by accident.
+
+## Quiz mode
+
+Pick a domain to start a **25-question** session (questions can be shuffled).
+Each answer locks in immediately and reveals the correct choice with an
+explanation; when the session ends you get a score summary with your
+percentage.
