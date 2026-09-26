@@ -33,3 +33,10 @@ Pick a domain to start a **25-question** session (questions can be shuffled).
 Each answer locks in immediately and reveals the correct choice with an
 explanation; when the session ends you get a score summary with your
 percentage.
+
+## Study progress
+
+A session pill in the sidebar tracks your session live: every flipped flashcard
+is counted as studied, and every answered quiz question bumps the question
+count. A progress bar shows both together as a share of all 173 cards + 125
+questions, so you always know how deep into a session you are.
