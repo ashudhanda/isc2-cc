@@ -40,3 +40,15 @@ A session pill in the sidebar tracks your session live: every flipped flashcard
 is counted as studied, and every answered quiz question bumps the question
 count. A progress bar shows both together as a share of all 173 cards + 125
 questions, so you always know how deep into a session you are.
+
+## How it's built
+
+- **Single self-contained `index.html`** — all study content (notes, 125 quiz
+  questions, 173 flashcards, 144 glossary terms) lives in one embedded data
+  block; there is no build step and no backend.
+- **Vanilla JS + CSS custom properties** — views render from a tiny `state`
+  object (`show` / `openDomain` switch panels; `updateSession` repaints the
+  session pill); theming is pure CSS variables with a manual light/dark
+  override on top of the OS preference.
+- **Fonts degrade gracefully** — DM Sans / Manrope load from Google Fonts when
+  online and fall back to system fonts offline.
