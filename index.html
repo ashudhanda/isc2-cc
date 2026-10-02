@@ -78,6 +78,8 @@ function md(text){const lines=String(text).replace(/\r/g,'').split('\n');let h='
  * render, while revealObs fades .reveal elements in once (180px before they enter
  * the viewport) and then unobserves them. */
 function magnet(el){el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;el.style.transform=`translate(${x*.12}px,${y*.12}px)`});el.addEventListener('pointerleave',()=>el.style.transform='')}
+/* Attach pointer micro-interactions (magnet + spotlight) and reveal-on-scroll
+ * observers to freshly rendered content. Called once per view render. */
 function addEffects(root=document){root.querySelectorAll('.spotlight').forEach(el=>el.addEventListener('pointermove',e=>{let r=el.getBoundingClientRect();el.style.setProperty('--mx',e.clientX-r.left+'px');el.style.setProperty('--my',e.clientY-r.top+'px')}));root.querySelectorAll('.magnetic').forEach(magnet);root.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el))}
 const revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');revealObs.unobserve(e.target)}}),{threshold:.01,rootMargin:'0px 0px 180px 0px'});
 function renderNav(){sideNav.innerHTML=nav.map(([id,label,ic])=>`<button class="nav-btn ${state.view===id?'active':''}" data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');bottomNav.innerHTML=nav.map(([id,label,ic])=>`<button class="bottom-btn ${state.view===id?'active':''}" data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go))}
