@@ -52,3 +52,12 @@ questions, so you always know how deep into a session you are.
   override on top of the OS preference.
 - **Fonts degrade gracefully** — DM Sans / Manrope load from Google Fonts when
   online and fall back to system fonts offline.
+
+## Accessibility
+
+- Full keyboard support in flashcards: **←/→** move between cards, **Space** or
+  **Enter** flips the current card. Shortcuts pause while typing in a text field.
+- The glossary search field has a screen-reader-only label; decorative icons are
+  hidden from assistive technology with `aria-hidden`.
+- `prefers-reduced-motion` disables all animations, and focus-visible outlines
+  mark every interactive element for keyboard users.
