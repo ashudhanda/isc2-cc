@@ -115,6 +115,9 @@ function renderQuizPicker(){quiz.innerHTML=`<div class="page-head"><div><p>Pract
 /* Starts a quiz run for one domain. Questions are cloned and reshuffled
  * (random sort) when shuffle mode is on, so the question order varies
  * between attempts. Option order within each question stays as authored. */
+/* Start a quiz session: questions are cloned with their original _i index (so a
+ * shuffle never loses the source order), optionally shuffled, answer state is
+ * reset, and the quiz view renders from question one. */
 function startQuiz(domainId,shuffle=false){let d=DATA.domains.find(x=>x.id===domainId);state.quizDomain=domainId;state.quizQuestions=d.questions.map((q,i)=>({...q,_i:i}));if(shuffle)state.quizQuestions.sort(()=>Math.random()-.5);state.qIndex=0;state.qAnswers=[];state.answered=0;state.view='quiz';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='quiz'));renderNav();renderQuestion();window.scrollTo(0,0)}
 /* Paints the current quiz question: progress bar, difficulty badge, option
  * buttons (A-D) and the hidden explanation slot; exits to the results
