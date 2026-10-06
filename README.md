@@ -53,6 +53,22 @@ questions, so you always know how deep into a session you are.
 - **Fonts degrade gracefully** — DM Sans / Manrope load from Google Fonts when
   online and fall back to system fonts offline.
 
+## Content model
+
+All study content lives in a `<script id="study-data" type="application/json">`
+block at the top of the file, parsed once with `JSON.parse` — no fetch, so the
+page stays fully offline. Shape:
+
+- `domains` — 5 entries: `{id, name, notes, questions}`. `notes` is a markdown
+  string rendered by the built-in `md()` helper; each domain holds 25
+  `questions`.
+- `questions` — `{stem, options, answer, explanation, difficulty}`. `options`
+  is a 4-item array; `answer` is its zero-based index; `difficulty` defaults to
+  `"Practice"` when omitted.
+- `flashcards` — 173 entries: `{domain, front, back}`.
+- `glossary` — 144 entries: `{term, definition}`.
+- `case_study` — 10 entries: `{n, title, concept, body}` (the JavaSip story).
+
 ## Accessibility
 
 - Full keyboard support in flashcards: **←/→** move between cards, **Space** or
