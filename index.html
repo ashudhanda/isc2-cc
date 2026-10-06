@@ -112,22 +112,18 @@ function renderDomain(){let d=DATA.domains.find(x=>x.id===state.domain);domain.i
  * and renderResult() summarizes the score. qAnswers[] records each pick;
  * a question cannot be answered twice. */
 function renderQuizPicker(){quiz.innerHTML=`<div class="page-head"><div><p>Practice mode</p><h1>Choose a quiz</h1><p>25 exam-style questions per domain, with instant explanations.</p></div></div><div class="quiz-picker">${DATA.domains.map((d,i)=>`<button class="picker spotlight" style="--domain:${colors[i]}" data-start="${d.id}"><span class="domain-num">DOMAIN 0${d.id}</span><h3>${esc(d.name)}</h3><small>25 questions · mixed difficulty</small></button>`).join('')}</div>`;quiz.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>startQuiz(+b.dataset.start));addEffects(quiz)}
-/* Starts a quiz run for one domain. Questions are cloned and reshuffled
- * (random sort) when shuffle mode is on, so the question order varies
- * between attempts. Option order within each question stays as authored. */
 /* Start a quiz session: questions are cloned with their original _i index (so a
- * shuffle never loses the source order), optionally shuffled, answer state is
- * reset, and the quiz view renders from question one. */
+ * shuffle never loses the source order), reshuffled (random sort) when shuffle
+ * mode is on, answer state is reset, and the quiz view renders from question
+ * one. Option order within each question stays as authored. */
 function startQuiz(domainId,shuffle=false){let d=DATA.domains.find(x=>x.id===domainId);state.quizDomain=domainId;state.quizQuestions=d.questions.map((q,i)=>({...q,_i:i}));if(shuffle)state.quizQuestions.sort(()=>Math.random()-.5);state.qIndex=0;state.qAnswers=[];state.answered=0;state.view='quiz';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='quiz'));renderNav();renderQuestion();window.scrollTo(0,0)}
 /* Paints the current quiz question: progress bar, difficulty badge, option
  * buttons (A-D) and the hidden explanation slot; exits to the results
  * view once the question list is exhausted. */
 function renderQuestion(){let qs=state.quizQuestions,d=DATA.domains.find(x=>x.id===state.quizDomain);if(state.qIndex>=qs.length){renderResult();return}let q=qs[state.qIndex];quiz.innerHTML=`<button class="back-link" id="exitQuiz">← Exit quiz</button><div class="quiz-shell"><div class="quiz-top"><span>${esc(d.name)}</span><b>Question ${state.qIndex+1} / ${qs.length}</b></div><div class="progress"><span style="width:${state.qIndex/qs.length*100}%"></span></div><article class="question-card"><span class="difficulty">${esc(q.difficulty||'Practice')}</span><h2>${esc(q.stem)}</h2><div class="options">${q.options.map((o,i)=>`<button class="option" data-opt="${i}"><span class="letter">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div><div class="explanation" id="explain"><b id="feedbackTitle"></b><span>${esc(q.explanation)}</span></div><div class="quiz-actions"><button class="btn primary" id="nextQ" hidden>${state.qIndex===qs.length-1?'See results':'Next question →'}</button></div></article></div>`;exitQuiz.onclick=()=>renderQuizPicker();quiz.querySelectorAll('[data-opt]').forEach(b=>b.onclick=()=>answerQuestion(+b.dataset.opt));nextQ.onclick=()=>{state.qIndex++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'})}}
-/* Locks in the answer on first click (later clicks are ignored), disables all
- * options, highlights the correct and chosen answers, and bumps the session counters. */
 /* Lock in the answer on first click only: the !=null guard ignores repeat clicks,
  * every option is disabled, the correct option is always marked (choice gets 'wrong'
- * when it misses), the explanation reveals and Next unhides. Counters bump once. */
+ * when it misses), the explanation reveals and Next unhides. Session counters bump once. */
 function answerQuestion(choice){if(state.qAnswers[state.qIndex]!=null)return;let q=state.quizQuestions[state.qIndex],correct=choice===q.answer;state.qAnswers[state.qIndex]={choice,correct,difficulty:q.difficulty||'Practice'};state.answered++;state.sessionQuestions++;updateSession();quiz.querySelectorAll('[data-opt]').forEach((b,i)=>{b.disabled=true;if(i===q.answer)b.classList.add('correct');else if(i===choice)b.classList.add('wrong')});feedbackTitle.textContent=correct?'Correct — lock it in.':'Not quite — here’s the rule.';explain.classList.add('show');nextQ.hidden=false}
 /* Summarizes the finished quiz: score ring with the pass/fail message,
  * correct/total counts, and a per-difficulty breakdown of the answers. */
@@ -142,23 +138,15 @@ function getFilteredCards(){return DATA.flashcards.map((c,i)=>({...c,_id:i})).fi
 /* Paint the flashcard view: filter chips, the current card (with flip + 3D faces) and
    prev/next controls. reset=true rebuilds the card order, e.g. after changing a filter. */
 function renderFlashcards(reset=false){if(reset||!state.cardOrder.length){state.cardOrder=getFilteredCards();state.cardIndex=0;state.flipped=false}let cards=state.cardOrder,c=cards[state.cardIndex];flashcards.innerHTML=`<div class="page-head"><div><p>Active recall</p><h1>Flashcards</h1><p>Think first. Flip second.</p></div></div><div class="filterbar"><div class="chips"><button class="chip ${state.cardsFilter===0?'active':''}" data-filter="0">All</button>${DATA.domains.map(d=>`<button class="chip ${state.cardsFilter===d.id?'active':''}" data-filter="${d.id}">D${d.id}</button>`).join('')}</div><button class="btn secondary" id="shuffleCards">Shuffle</button></div><div class="flash-stage"><div class="flashcard ${state.flipped?'flipped':''}" id="flashcard" tabindex="0" role="button" aria-label="Flip flashcard: ${esc(c.front)}"><section class="face front"><span class="face-label">Term</span><span class="domain-dot">Domain ${c.domain}</span><h2>${esc(c.front)}</h2><span class="tap-hint">Tap to reveal</span></section><section class="face back"><span class="face-label">Definition</span><span class="domain-dot">Domain ${c.domain}</span><p>${esc(c.back)}</p><span class="tap-hint">Tap to return</span></section></div></div><div class="flash-controls"><button class="round-btn" id="prevCard" aria-label="Previous card">←</button><span class="flash-count">${state.cardIndex+1} / ${cards.length}</span><button class="round-btn" id="nextCard" aria-label="Next card">→</button></div><p class="key-hint">Use ← → keys to move · Space to flip</p>`;flashcards.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{state.cardsFilter=+b.dataset.filter;state.cardOrder=[];renderFlashcards(true)});flashcard.onclick=flipCard;flashcard.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flipCard()}};prevCard.onclick=()=>moveCard(-1);nextCard.onclick=()=>moveCard(1);shuffleCards.onclick=()=>{state.cardOrder=getFilteredCards().sort(()=>Math.random()-.5);state.cardIndex=0;state.flipped=false;renderFlashcards()};flashcard.addEventListener('pointermove',e=>{let r=flashcard.getBoundingClientRect();flashcard.querySelectorAll('.face').forEach(f=>{f.style.setProperty('--mx',e.clientX-r.left+'px');f.style.setProperty('--my',e.clientY-r.top+'px')})})}
-/* Toggles the 3D flip of the current flashcard. Flipping to the answer side marks
- * the card as studied for this session, which advances the session pill's progress. */
-/* flipCard toggles the 3D flip and counts the card as studied on first flip (the
- * Set dedupes re-flips); moveCard wraps the index modulo the deck and resets
- * the flip state before re-rendering. */
+/* Toggle the 3D flip of the current flashcard. Flipping to the answer side counts
+ * the card as studied (the Set dedupes re-flips), advancing the session pill's progress. */
 function flipCard(){state.flipped=!state.flipped;flashcard.classList.toggle('flipped',state.flipped);let c=state.cardOrder[state.cardIndex];if(state.flipped){state.studied.add(c._id);updateSession()}}
 /* Move the flashcard deck n steps (wrapping around), unflip, and re-render. */
 function moveCard(n){let len=state.cardOrder.length;state.cardIndex=(state.cardIndex+n+len)%len;state.flipped=false;renderFlashcards()}
-document./*
- * Keyboard shortcuts (flashcards view only): Left/Right move to the previous/next
- * card, Space flips the current card (preventDefault stops the page scrolling).
- * Shortcuts stay inert while typing in an input or textarea; Enter flips a focused
- * card through the button's native keyboard activation.
- */
-/* Flashcard shortcuts live here (the card itself also handles Enter/Space on
- * keydown): ←/→ move, Space flips. They fire only in the flashcards view and are
- * ignored while typing in an input or textarea, so glossary search stays safe. */
+document./* Flashcard keyboard shortcuts (flashcards view only): ArrowLeft/ArrowRight move to
+ * the previous/next card, Space flips the current card (preventDefault stops page
+ * scrolling). They stay inert while typing in an input or textarea; Enter flips a
+ * focused card through the button's native keyboard activation. */
 addEventListener('keydown',e=>{if(state.view!=='flashcards'||['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='ArrowLeft')moveCard(-1);if(e.key==='ArrowRight')moveCard(1);if(e.key===' '){e.preventDefault();flipCard()}})
 /* Paint the glossary view and its live-search list from DATA.glossary (144 terms). */
 function renderGlossary(){glossary.innerHTML=`<div class="page-head"><div><p>144 quick definitions</p><h1>Glossary</h1><p>Search the language of cybersecurity.</p></div></div><label class="search-wrap"><span class="sr-only">Search terms</span>${icons.terms}<input class="search" id="termSearch" placeholder="Search a term or definition…" autocomplete="off"></label><div class="glossary-list" id="termList"></div>`;termSearch.oninput=()=>paintTerms(termSearch.value);paintTerms('');termSearch.focus({preventScroll:true})}
