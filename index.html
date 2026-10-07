@@ -37,6 +37,11 @@
 <body>
 <div class="ambient"></div><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
 <div class="shell">
+<!-- App shell: sidebar rail (nav + live session progress), the main view panels
+     (dashboard, domain, quiz, flashcards, glossary, case — one .view active at a
+     time, painted by the render* functions), and the mobile bottom nav. The
+     ambient/orb divs are decorative; theme comes from <html data-theme> and the
+     theme toggle. -->
 <aside class="rail" aria-label="Main navigation"><div class="rail-label">Study desk</div><nav class="nav-stack" id="sideNav"></nav><div class="rail-progress"><strong id="railProgress">Start a study session</strong><small id="railMeta">0 cards · 0 questions</small><div class="microbar"><span id="railBar" role="progressbar" aria-label="Session study progress" aria-valuemin="0"></span></div></div></aside>
 <main class="main"><div class="topline"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"></button><div class="session-pill"><span class="pulse"></span><span id="sessionText">Session ready</span></div></div>
 <section id="dashboard" class="view active"></section><section id="domain" class="view"></section><section id="quiz" class="view"></section><section id="flashcards" class="view"></section><section id="glossary" class="view"></section><section id="case" class="view"></section></main>
