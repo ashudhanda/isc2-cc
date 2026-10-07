@@ -92,6 +92,9 @@ function magnet(el){el.addEventListener('pointermove',e=>{const r=el.getBounding
  * observers to freshly rendered content. Called once per view render. */
 function addEffects(root=document){root.querySelectorAll('.spotlight').forEach(el=>el.addEventListener('pointermove',e=>{let r=el.getBoundingClientRect();el.style.setProperty('--mx',e.clientX-r.left+'px');el.style.setProperty('--my',e.clientY-r.top+'px')}));root.querySelectorAll('.magnetic').forEach(magnet);root.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el))}
 const revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');revealObs.unobserve(e.target)}}),{threshold:.01,rootMargin:'0px 0px 180px 0px'});
+/* Paints both navigation surfaces from the nav model: the desktop sidebar (sideNav)
+ * and the mobile bottom bar (bottomNav). The active view button follows state.view;
+ * every button is wired to show(). Re-rendered by show() on each view switch. */
 function renderNav(){sideNav.innerHTML=nav.map(([id,label,ic])=>`<button class="nav-btn ${state.view===id?'active':''}" data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');bottomNav.innerHTML=nav.map(([id,label,ic])=>`<button class="bottom-btn ${state.view===id?'active':''}" data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go))}
 /* Switch the active view panel and repaint the nav; 'domain' renders via openDomain. */
 function show(id){state.view=id;document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));renderNav();if(id==='dashboard')renderDashboard();if(id==='flashcards')renderFlashcards();if(id==='quiz')renderQuizPicker();if(id==='glossary')renderGlossary();if(id==='case')renderCase();window.scrollTo({top:0,behavior:'smooth'})}
