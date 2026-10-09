@@ -161,11 +161,11 @@ function renderFlashcards(reset=false){if(reset||!state.cardOrder.length){state.
 function flipCard(){state.flipped=!state.flipped;flashcard.classList.toggle('flipped',state.flipped);let c=state.cardOrder[state.cardIndex];if(state.flipped){state.studied.add(c._id);updateSession()}}
 /* Move the flashcard deck n steps (wrapping around), unflip, and re-render. */
 function moveCard(n){let len=state.cardOrder.length;state.cardIndex=(state.cardIndex+n+len)%len;state.flipped=false;renderFlashcards()}
-document./* Flashcard keyboard shortcuts (flashcards view only): ArrowLeft/ArrowRight move to
+/* Flashcard keyboard shortcuts (flashcards view only): ArrowLeft/ArrowRight move to
  * the previous/next card, Space flips the current card (preventDefault stops page
  * scrolling). They stay inert while typing in an input or textarea; Enter flips a
  * focused card through the button's native keyboard activation. */
-addEventListener('keydown',e=>{if(state.view!=='flashcards'||['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='ArrowLeft')moveCard(-1);if(e.key==='ArrowRight')moveCard(1);if(e.key===' '){e.preventDefault();flipCard()}})
+document.addEventListener('keydown',e=>{if(state.view!=='flashcards'||['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='ArrowLeft')moveCard(-1);if(e.key==='ArrowRight')moveCard(1);if(e.key===' '){e.preventDefault();flipCard()}})
 /* Paint the glossary view and its live-search list from DATA.glossary (144 terms). */
 function renderGlossary(){glossary.innerHTML=`<div class="page-head"><div><p>144 quick definitions</p><h1>Glossary</h1><p>Search the language of cybersecurity.</p></div></div><label class="search-wrap"><span class="sr-only">Search terms</span>${icons.terms}<input class="search" id="termSearch" placeholder="Search a term or definition…" autocomplete="off"></label><div class="glossary-list" id="termList"></div>`;termSearch.oninput=()=>paintTerms(termSearch.value);paintTerms('');termSearch.focus({preventScroll:true})}
 /* Repaints the glossary list for the search query q (case-insensitive,
