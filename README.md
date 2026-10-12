@@ -32,7 +32,9 @@ Shortcuts are ignored while typing in a text field (e.g. glossary search), so ty
 Pick a domain to start a **25-question** session (questions can be shuffled).
 Each answer locks in immediately and reveals the correct choice with an
 explanation; when the session ends you get a score summary with your
-percentage.
+percentage. The closing message depends on your score: **80%+** earns
+"Strong finish.", **60–79%** gets "Good base. Keep sharpening.", and anything
+lower gets "Review, recall, retry."
 
 ## Study progress
 
