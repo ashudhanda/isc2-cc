@@ -23,7 +23,6 @@ In flashcards view:
 
 - **← / →** — previous / next card
 - **Space** — flip the current card
-- **Enter** — flip the card when it has focus
 
 Shortcuts are ignored while typing in a text field (e.g. glossary search), so typing never flips or changes cards by accident.
 
@@ -73,8 +72,8 @@ page stays fully offline. Shape:
 
 ## Accessibility
 
-- Full keyboard support in flashcards: **←/→** move between cards, **Space** or
-  **Enter** flips the current card. Shortcuts pause while typing in a text field.
+- Full keyboard support in flashcards: **←/→** move between cards, **Space** flips
+  the current card. Shortcuts pause while typing in a text field.
 - The glossary search field has a screen-reader-only label; decorative icons are
   hidden from assistive technology with `aria-hidden`.
 - `prefers-reduced-motion` disables all animations, and focus-visible outlines
