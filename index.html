@@ -179,6 +179,8 @@ function paintTerms(q){let s=q.toLowerCase().trim(),items=DATA.glossary.filter(x
 /* Paints the JavaSip case study as a vertical timeline: one numbered story
  * card per concept, each rendered through the inline markdown helper. */
 function renderCase(){const caseView=document.getElementById('case');caseView.innerHTML=`<div class="page-head"><div><p>JavaSip case study</p><h1>Security, told as a story</h1><p>Ten moments. Ten concepts worth remembering.</p></div></div><div class="timeline">${DATA.case_study.map(x=>`<article class="story reveal"><span class="story-num">${String(x.n).padStart(2,'0')}</span><div class="story-card"><h2>${esc(x.title)}</h2><span class="concept">${esc(x.concept)}</span><div>${md(x.body)}</div></div></article>`).join('')}</div>`;addEffects(caseView)}
+/* Boot: paint the nav surfaces, render the dashboard, then sync the session
+ * pill (0 cards / 0 questions studied, the 'Start a study session' state). */
 renderNav();renderDashboard();updateSession();
 </script>
 </body></html>
