@@ -22,7 +22,7 @@ Or enable GitHub Pages: Settings → Pages → Deploy from branch → `main` →
 In flashcards view:
 
 - **← / →** — previous / next card
-- **Space** — flip the current card
+- **Space / Enter** — flip the current card
 
 Shortcuts are ignored while typing in a text field (e.g. glossary search), so typing never flips or changes cards by accident.
 
@@ -72,7 +72,7 @@ page stays fully offline. Shape:
 
 ## Accessibility
 
-- Full keyboard support in flashcards: **←/→** move between cards, **Space** flips
+- Full keyboard support in flashcards: **←/→** move between cards, **Space / Enter** flips
   the current card. Shortcuts pause while typing in a text field.
 - The glossary search field has a screen-reader-only label; decorative icons are
   hidden from assistive technology with `aria-hidden`.
