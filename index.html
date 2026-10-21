@@ -107,7 +107,7 @@ const revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)
  * and the mobile bottom bar (bottomNav). The active view button follows state.view;
  * every button is wired to show(). Re-rendered by show() on each view switch. */
 function renderNav(){sideNav.innerHTML=nav.map(([id,label,ic])=>`<button class="nav-btn ${state.view===id?'active':''}"${state.view===id?' aria-current="page"':''} data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');bottomNav.innerHTML=nav.map(([id,label,ic])=>`<button class="bottom-btn ${state.view===id?'active':''}"${state.view===id?' aria-current="page"':''} data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go))}
-/* Switch the active view panel and repaint the nav; 'domain' renders via openDomain. */
+/* Switch the active view panel, repaint the nav and smooth-scroll to top; 'domain' renders via openDomain (which scrolls instantly). */
 function show(id){state.view=id;document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));renderNav();if(id==='dashboard')renderDashboard();if(id==='flashcards')renderFlashcards();if(id==='quiz')renderQuizPicker();if(id==='glossary')renderGlossary();if(id==='case')renderCase();window.scrollTo({top:0,behavior:'smooth'})}
 /* Refresh the sidebar session pill: flipped cards count as studied, answered quiz
  * questions count toward 125; the bar shows both as a share of 173 cards + 125 questions. */
