@@ -62,7 +62,8 @@ page stays fully offline. Shape:
 
 - `domains` — 5 entries: `{id, name, notes, questions}`. `notes` is a markdown
   string rendered by the built-in `md()` helper; each domain holds 25
-  `questions`.
+  `questions`. A notes heading's em-dash subtitle (e.g. `# Domain 1 — Study
+  Notes`) is stripped at render, so the page shows just the title.
 - `questions` — `{stem, options, answer, explanation, difficulty}`. `options`
   is a 4-item array; `answer` is its zero-based index; `difficulty` defaults to
   `"Practice"` when omitted.
