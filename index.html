@@ -89,7 +89,9 @@ function inline(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace
 /* Tiny markdown renderer for domain notes and quiz explanations.
  * Supports #/##/### headings, -/* bulleted lists, 1. numbered lists,
  * > blockquotes, | tables and inline() formatting. Any other line
- * becomes a plain <p>. */
+ * becomes a plain <p>. A heading's em-dash subtitle (e.g. the domain
+ * h1 "# Domain 1: ... — Study Notes") is stripped, so the page shows just
+ * the title. */
 function md(text){const lines=String(text).replace(/\r/g,'').split('\n');let h='',i=0,inList=false,listType='';const close=()=>{if(inList){h+=`</${listType}>`;inList=false}};while(i<lines.length){let l=lines[i];if(/^\s*\|/.test(l)&&i+1<lines.length&&/^\s*\|?\s*:?-+/.test(lines[i+1])){close();let rows=[];rows.push(l);i+=2;while(i<lines.length&&/^\s*\|/.test(lines[i]))rows.push(lines[i++]);const cells=x=>x.trim().replace(/^\||\|$/g,'').split('|').map(v=>inline(v.trim()));h+='<div class="table-wrap"><table><thead><tr>'+cells(rows[0]).map(x=>`<th>${x}</th>`).join('')+'</tr></thead><tbody>'+rows.slice(1).map(r=>'<tr>'+cells(r).map(x=>`<td>${x}</td>`).join('')+'</tr>').join('')+'</tbody></table></div>';continue}let m;if(m=l.match(/^(#{1,3})\s+(.+)/)){close();let n=m[1].length,txt=m[2].replace(/\s+—.*/,'');let id='h-'+i;h+=`<h${n} id="${id}">${inline(txt)}</h${n}>`;i++;continue}if(/^>\s?/.test(l)){close();h+=`<blockquote>${inline(l.replace(/^>\s?/,''))}</blockquote>`;i++;continue}if((m=l.match(/^\s*[-*]\s+(.+)/))){if(!inList||listType!=='ul'){close();h+='<ul>';inList=true;listType='ul'}h+=`<li>${inline(m[1])}</li>`;i++;continue}if((m=l.match(/^\s*\d+[.)]\s+(.+)/))){if(!inList||listType!=='ol'){close();h+='<ol>';inList=true;listType='ol'}h+=`<li>${inline(m[1])}</li>`;i++;continue}close();if(l.trim())h+=`<p>${inline(l)}</p>`;i++}close();return h}
 /* Pointer micro-interactions: .magnetic buttons lean toward the cursor (12% of the
  * offset from the center) and snap back on pointerleave; .spotlight cards move a
