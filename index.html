@@ -66,6 +66,8 @@ const themeIcons={sun:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="1
  * data-theme attribute on <html>, and keeps the toggle accessible by updating
  * its icon, visible label, aria-label and aria-pressed state on every switch. */
 function setTheme(theme){document.documentElement.dataset.theme=theme;const dark=theme==='dark';themeToggle.innerHTML=`${themeIcons[dark?'sun':'moon']}<span>${dark?'Light':'Dark'}</span>`;themeToggle.setAttribute('aria-label',`Switch to ${dark?'light':'dark'} mode`);themeToggle.setAttribute('aria-pressed',String(dark))}
+/* First paint: the theme follows the OS/device preference at load — there is no
+ * stored preference, so each visit starts from the system setting until toggled. */
 const systemTheme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';setTheme(systemTheme);themeToggle.addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 /* Decorative inline-SVG icon set (aria-hidden): keyed by name, shared by the
  * nav, the theme toggle, and the view renderers — no external icon font needed. */
