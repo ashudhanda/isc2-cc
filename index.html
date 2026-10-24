@@ -102,6 +102,9 @@ function magnet(el){el.addEventListener('pointermove',e=>{const r=el.getBounding
 /* Attach pointer micro-interactions (magnet + spotlight) and reveal-on-scroll
  * observers to freshly rendered content. Called once per view render. */
 function addEffects(root=document){root.querySelectorAll('.spotlight').forEach(el=>el.addEventListener('pointermove',e=>{let r=el.getBoundingClientRect();el.style.setProperty('--mx',e.clientX-r.left+'px');el.style.setProperty('--my',e.clientY-r.top+'px')}));root.querySelectorAll('.magnetic').forEach(magnet);root.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el))}
+/* One-shot reveal-on-scroll: a .reveal element gains .seen as soon as it is
+ * within 180px below the viewport (threshold .01), then is unobserved so its
+ * fade-in animation runs exactly once. addEffects() attaches it on every render. */
 const revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');revealObs.unobserve(e.target)}}),{threshold:.01,rootMargin:'0px 0px 180px 0px'});
 /* Paints both navigation surfaces from the nav model: the desktop sidebar (sideNav)
  * and the mobile bottom bar (bottomNav). The active view button follows state.view;
