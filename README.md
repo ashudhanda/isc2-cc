@@ -48,9 +48,12 @@ questions, so you always know how deep into a session you are.
   questions, 173 flashcards, 144 glossary terms) lives in one embedded data
   block; there is no build step and no backend.
 - **Vanilla JS + CSS custom properties** — views render from a tiny `state`
-  object (`show` / `openDomain` switch panels; `updateSession` repaints the
-  session pill); theming is pure CSS variables with a manual light/dark
-  override on top of the OS preference.
+  object (`view` / `domain` / `domainTab` pick the panel; `show()` and
+  `openDomain()` do the switching; `updateSession` repaints the session
+  pill); theming is pure CSS variables with a manual light/dark override
+  on top of the OS preference. Nothing is stored: the theme override and
+  the session progress reset on reload, so each visit starts from the OS
+  preference with a fresh session.
 - **Fonts degrade gracefully** — DM Sans / Manrope load from Google Fonts when
   online and fall back to system fonts offline.
 
