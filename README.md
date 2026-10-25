@@ -37,9 +37,10 @@ lower gets "Review, recall, retry."
 
 ## Study progress
 
-A session pill in the sidebar tracks your session live: every flipped flashcard
+A session pill in the top bar tracks your session live (the desktop sidebar
+holds the same progress as a card with a bar): every flipped flashcard
 is counted as studied, and every answered quiz question bumps the question
-count. A progress bar shows both together as a share of all 173 cards + 125
+count. The bar shows both together as a share of all 173 cards + 125
 questions, so you always know how deep into a session you are.
 
 ## How it's built
