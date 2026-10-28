@@ -80,7 +80,11 @@ page stays fully offline. Shape:
 - Full keyboard support in flashcards: **←/→** move between cards, **Space / Enter** flips
   the current card. Shortcuts pause while typing in a text field.
 - The glossary search field has a screen-reader-only label; decorative icons are
-  hidden from assistive technology with `aria-hidden`.
+  hidden from assistive technology with `aria-hidden`, as are the decorative
+  ambient/orb background divs.
+- Quiz feedback is announced to screen readers: the explanation panel is a
+  polite live region, so answering a question reads out the "Correct" /
+  "Not quite" verdict.
 - Flashcard filter chips expose their state with `aria-pressed`, the domain
   tabs use `aria-selected`, and the notes table of contents is a labelled
   landmark (`aria-label="On this page"`).
