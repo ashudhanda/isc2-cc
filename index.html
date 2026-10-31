@@ -181,8 +181,8 @@ function renderFlashcards(reset=false){if(reset||!state.cardOrder.length){state.
 /* Toggle the 3D flip of the current flashcard. Flipping to the answer side counts
  * the card as studied (the Set dedupes re-flips), advancing the session pill's
  * progress. The card's aria-label follows the flip state, so screen readers always
- * hear the next available action (reveal the definition, or flip back to the term). */
-function flipCard(){state.flipped=!state.flipped;flashcard.classList.toggle('flipped',state.flipped);let c=state.cardOrder[state.cardIndex];flashcard.setAttribute('aria-label',state.flipped?'Flip back to term':'Flip flashcard: '+esc(c.front));if(state.flipped){state.studied.add(c._id);updateSession()}}
+ * hear the next available action (reveal the definition, or flip back to the term). setAttribute takes the raw string, so the term is NOT esc()aped here: esc() is for HTML serialization only, and would make screen readers read entities aloud. */
+function flipCard(){state.flipped=!state.flipped;flashcard.classList.toggle('flipped',state.flipped);let c=state.cardOrder[state.cardIndex];flashcard.setAttribute('aria-label',state.flipped?'Flip back to term':'Flip flashcard: '+c.front);if(state.flipped){state.studied.add(c._id);updateSession()}}
 /* Move the flashcard deck n steps (wrapping around), unflip, and re-render. */
 function moveCard(n){let len=state.cardOrder.length;state.cardIndex=(state.cardIndex+n+len)%len;state.flipped=false;renderFlashcards()}
 /* Flashcard keyboard shortcuts (flashcards view only): ArrowLeft/ArrowRight move to
