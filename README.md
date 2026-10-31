@@ -57,6 +57,9 @@ questions, so you always know how deep into a session you are.
   preference with a fresh session.
 - **Fonts degrade gracefully** — DM Sans / Manrope load from Google Fonts when
   online and fall back to system fonts offline.
+- **Shuffles are unbiased** — quiz questions and flashcards share one
+  Fisher-Yates `shuffle()` helper; the old random-comparator `sort()` did not
+  produce uniform permutations.
 
 ## Content model
 
@@ -88,6 +91,10 @@ page stays fully offline. Shape:
 - Flashcard filter chips expose their state with `aria-pressed`, the domain
   tabs use `aria-selected`, and the notes table of contents is a labelled
   landmark (`aria-label="On this page"`).
+- Domain tabs support **Left / Right arrow keys** to move focus between the
+  Notes and Quiz tabs (manual activation: Enter, Space, or click still selects).
+- The glossary "no terms match" message is a polite live region, so a search
+  with zero results is announced instead of silently emptying the list.
 - Keyboard focus is visible on every interactive control: buttons, nav, quiz
   options, chips, domain tabs, bottom nav, flashcard controls, quick-study and
   quiz-picker buttons, back links, and the focusable flashcard itself.
