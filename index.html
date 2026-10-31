@@ -150,10 +150,13 @@ function renderDomain(){let d=DATA.domains.find(x=>x.id===state.domain);domain.i
  * a question cannot be answered twice. */
 function renderQuizPicker(){quiz.innerHTML=`<div class="page-head"><div><p>Practice mode</p><h1>Choose a quiz</h1><p>25 exam-style questions per domain, with instant explanations.</p></div></div><div class="quiz-picker">${DATA.domains.map((d,i)=>`<button class="picker spotlight" style="--domain:${colors[i]}" data-start="${d.id}"><span class="domain-num">DOMAIN 0${d.id}</span><h3>${esc(d.name)}</h3><small>${d.questions.length} questions · mixed difficulty</small></button>`).join('')}</div>`;quiz.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>startQuiz(+b.dataset.start));addEffects(quiz)}
 /* Start a quiz session: questions are cloned with their original _i index (so a
- * shuffle never loses the source order), reshuffled (random sort) when shuffle
+ * shuffle never loses the source order), reshuffled (Fisher-Yates) when shuffle
  * mode is on, answer state is reset, and the quiz view renders from question
  * one. Option order within each question stays as authored. */
-function startQuiz(domainId,shuffle=false){let d=DATA.domains.find(x=>x.id===domainId);state.quizDomain=domainId;state.quizQuestions=d.questions.map((q,i)=>({...q,_i:i}));if(shuffle)state.quizQuestions.sort(()=>Math.random()-.5);state.qIndex=0;state.qAnswers=[];state.answered=0;state.view='quiz';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='quiz'));renderNav();renderQuestion();window.scrollTo(0,0)}
+/* Fisher-Yates shuffle (unbiased, in place): the old Array.sort() with a random
+ * comparator does not produce a uniform permutation, so both shuffles go through here. */
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+function startQuiz(domainId,shuffle=false){let d=DATA.domains.find(x=>x.id===domainId);state.quizDomain=domainId;state.quizQuestions=d.questions.map((q,i)=>({...q,_i:i}));if(shuffle)shuffle(state.quizQuestions);state.qIndex=0;state.qAnswers=[];state.answered=0;state.view='quiz';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='quiz'));renderNav();renderQuestion();window.scrollTo(0,0)}
 /* Paints the current quiz question: progress bar, difficulty badge, option
  * buttons (A-D) and the hidden explanation slot; exits to the results
  * view once the question list is exhausted. */
