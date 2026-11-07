@@ -9,7 +9,7 @@ Interactive study website for the **ISC2 CC (Certified in Cybersecurity)** exam.
 - **Quiz mode** — instant answer feedback with explanations, score summary
 - **Glossary** — 144 terms with live search
 - **Case study** — 10-part JavaSip story mapped to security concepts
-- **Light/dark mode toggle** (follows device theme) with React Bits-inspired animations
+- **Light/dark mode toggle** (follows device theme, choice remembered) with React Bits-inspired animations
 
 ## Run it
 
@@ -52,9 +52,9 @@ questions, so you always know how deep into a session you are.
   object (`view` / `domain` / `domainTab` pick the panel; `show()` and
   `openDomain()` do the switching; `updateSession` repaints the session
   pill); theming is pure CSS variables with a manual light/dark override
-  on top of the OS preference. Nothing is stored: the theme override and
-  the session progress reset on reload, so each visit starts from the OS
-  preference with a fresh session.
+  on top of the OS preference. The theme choice is stored in `localStorage`
+  (guarded, so private mode just falls back to the OS preference); the
+  session progress still resets on reload, so each visit starts fresh.
 - **Fonts degrade gracefully** — DM Sans / Manrope load from Google Fonts when
   online and fall back to system fonts offline.
 - **Shuffles are unbiased** — quiz questions and flashcards share one
@@ -95,6 +95,8 @@ page stays fully offline. Shape:
   Notes and Quiz tabs (manual activation: Enter, Space, or click still selects).
 - The glossary "no terms match" message is a polite live region, so a search
   with zero results is announced instead of silently emptying the list.
+- Switching views moves keyboard focus to the new view's heading, so keyboard
+  and screen-reader users land on the content instead of staying on the nav button.
 - Keyboard focus is visible on every interactive control: buttons, nav, quiz
   options, chips, domain tabs, bottom nav, flashcard controls, quick-study and
   quiz-picker buttons, back links, and the focusable flashcard itself.
