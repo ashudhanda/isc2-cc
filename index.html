@@ -84,10 +84,10 @@ const nav=[['dashboard','Home','home'],['flashcards','Cards','cards'],['quiz','Q
 /* Global session state — the single source of truth. Every render* function reads
  * this and repaints its panel instead of mutating the DOM directly. view/domain/
  * domainTab pick the visible panel; the flashcard group (cardsFilter, cardOrder,
- * cardIndex, flipped) and quiz group (quizDomain, quizQuestions, qIndex, qAnswers,
- * answered) hold each mode's progress; studied and sessionQuestions feed the
+ * cardIndex, flipped) and quiz group (quizDomain, quizQuestions, qIndex, qAnswers)
+ * hold each mode's progress; studied and sessionQuestions feed the
  * session pill via updateSession(). Nothing is persisted — progress resets on reload. */
-let state={view:'dashboard',domain:1,domainTab:'notes',cardsFilter:0,cardOrder:[],cardIndex:0,flipped:false,quizQuestions:[],quizDomain:null,qIndex:0,qAnswers:[],answered:0,studied:new Set(),sessionQuestions:0};
+let state={view:'dashboard',domain:1,domainTab:'notes',cardsFilter:0,cardOrder:[],cardIndex:0,flipped:false,quizQuestions:[],quizDomain:null,qIndex:0,qAnswers:[],studied:new Set(),sessionQuestions:0};
 /* Escape the five HTML-significant chars in study-data strings before DOM
  * injection. Every dynamic render path (inline(), md(), render*) passes through
  * esc first, so authored content can never break the markup or inject scripts. */
@@ -173,7 +173,7 @@ function renderQuizPicker(){quiz.innerHTML=`<div class="page-head"><div><p>Pract
 /* Fisher-Yates shuffle (unbiased, in place): the old Array.sort() with a random
  * comparator does not produce a uniform permutation, so both shuffles go through here. */
 function shuffle(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
-function startQuiz(domainId,doShuffle=false){let d=DATA.domains.find(x=>x.id===domainId);if(!d)return;state.quizDomain=domainId;state.quizQuestions=d.questions.map((q,i)=>({...q,_i:i}));if(doShuffle)shuffle(state.quizQuestions);state.qIndex=0;state.qAnswers=[];state.answered=0;state.view='quiz';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='quiz'));renderNav();renderQuestion();window.scrollTo(0,0)}
+function startQuiz(domainId,doShuffle=false){let d=DATA.domains.find(x=>x.id===domainId);if(!d)return;state.quizDomain=domainId;state.quizQuestions=d.questions.map((q,i)=>({...q,_i:i}));if(doShuffle)shuffle(state.quizQuestions);state.qIndex=0;state.qAnswers=[];state.view='quiz';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='quiz'));renderNav();renderQuestion();window.scrollTo(0,0)}
 /* Paints the current quiz question: progress bar, difficulty badge, option
  * buttons (A-D) and the hidden explanation slot; exits to the results
  * view once the question list is exhausted. */
@@ -181,7 +181,7 @@ function renderQuestion(){let qs=state.quizQuestions,d=DATA.domains.find(x=>x.id
 /* Lock in the answer on first click only: the !=null guard ignores repeat clicks,
  * every option is disabled, the correct option is always marked (choice gets 'wrong'
  * when it misses), the explanation reveals and Next unhides. Session counters bump once. */
-function answerQuestion(choice){if(state.qAnswers[state.qIndex]!=null)return;let q=state.quizQuestions[state.qIndex],correct=choice===q.answer;state.qAnswers[state.qIndex]={choice,correct,difficulty:q.difficulty||'Practice'};state.answered++;state.sessionQuestions++;updateSession();quiz.querySelectorAll('[data-opt]').forEach((b,i)=>{b.disabled=true;if(i===q.answer)b.classList.add('correct');else if(i===choice)b.classList.add('wrong')});feedbackTitle.textContent=correct?'Correct — lock it in.':'Not quite — here’s the rule.';explain.classList.add('show');nextQ.hidden=false}
+function answerQuestion(choice){if(state.qAnswers[state.qIndex]!=null)return;let q=state.quizQuestions[state.qIndex],correct=choice===q.answer;state.qAnswers[state.qIndex]={choice,correct,difficulty:q.difficulty||'Practice'};state.sessionQuestions++;updateSession();quiz.querySelectorAll('[data-opt]').forEach((b,i)=>{b.disabled=true;if(i===q.answer)b.classList.add('correct');else if(i===choice)b.classList.add('wrong')});feedbackTitle.textContent=correct?'Correct — lock it in.':'Not quite — here’s the rule.';explain.classList.add('show');nextQ.hidden=false}
 /* Summarizes the finished quiz: score ring with the pass/fail message,
  * correct/total counts, and a per-difficulty breakdown of the answers. */
 function renderResult(){let correct=state.qAnswers.filter(a=>a&&a.correct).length,total=state.quizQuestions.length,pct=total?Math.round(correct/total*100):0,group={};state.qAnswers.forEach(a=>{let k=a.difficulty||'Practice';group[k]??={c:0,t:0};group[k].t++;if(a.correct)group[k].c++});quiz.innerHTML=`<div class="quiz-shell"><article class="question-card result"><div class="score-ring" style="--score:${pct}" role="progressbar" aria-label="Quiz score" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div>${pct}%</div></div><h2>${pct>=80?'Strong finish.':pct>=60?'Good base. Keep sharpening.':'Review, recall, retry.'}</h2><p>${correct} of ${total} correct in Domain 0${state.quizDomain}.</p><div class="breakdown">${Object.entries(group).map(([k,v])=>`<div><b>${v.c}/${v.t}</b><span>${esc(k)}</span></div>`).join('')}</div><div class="result-actions"><button class="btn secondary" id="retryQuiz">Retry</button><button class="btn primary" id="shuffleQuiz">Shuffle & retry</button></div></article></div>`;retryQuiz.onclick=()=>startQuiz(state.quizDomain,false);shuffleQuiz.onclick=()=>startQuiz(state.quizDomain,true)}
