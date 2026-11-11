@@ -5,7 +5,7 @@ Interactive study website for the **ISC2 CC (Certified in Cybersecurity)** exam.
 ## What's inside
 
 - **5 domain sections** — concise notes + 25 practice questions each (125 total)
-- **Flashcards** — 173 cards with 3D flip animation, shuffle, and domain filters
+- **Flashcards** — 170 cards with 3D flip animation, shuffle, and domain filters
 - **Quiz mode** — instant answer feedback with explanations, score summary
 - **Glossary** — 144 terms with live search
 - **Case study** — 10-part JavaSip story mapped to security concepts
@@ -40,13 +40,13 @@ lower gets "Review, recall, retry."
 A session pill in the top bar tracks your session live (the desktop sidebar
 holds the same progress as a card with a bar): every flipped flashcard
 is counted as studied, and every answered quiz question bumps the question
-count. The bar shows both together as a share of all 173 cards + 125
+count. The bar shows both together as a share of all 170 cards + 125
 questions, so you always know how deep into a session you are.
 
 ## How it's built
 
 - **Single self-contained `index.html`** — all study content (notes, 125 quiz
-  questions, 173 flashcards, 144 glossary terms) lives in one embedded data
+  questions, 170 flashcards, 144 glossary terms) lives in one embedded data
   block; there is no build step and no backend.
 - **Vanilla JS + CSS custom properties** — views render from a tiny `state`
   object (`view` / `domain` / `domainTab` pick the panel; `show()` and
@@ -74,7 +74,7 @@ page stays fully offline. Shape:
 - `questions` — `{stem, options, answer, explanation, difficulty}`. `options`
   is a 4-item array; `answer` is its zero-based index; `difficulty` defaults to
   `"Practice"` when omitted.
-- `flashcards` — 173 entries: `{domain, front, back}`.
+- `flashcards` — 170 entries: `{domain, front, back}` (each front/back pair is unique — exact duplicates across domains were removed).
 - `glossary` — 144 entries: `{term, definition}`.
 - `case_study` — 10 entries: `{n, title, concept, body}` (the JavaSip story).
 
