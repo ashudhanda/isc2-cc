@@ -117,7 +117,10 @@ function addEffects(root=document){root.querySelectorAll('.spotlight').forEach(e
 /* One-shot reveal-on-scroll: a .reveal element gains .seen as soon as it is
  * within 180px below the viewport (threshold .01), then is unobserved so its
  * fade-in animation runs exactly once. addEffects() attaches it on every render. */
-const revealObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');revealObs.unobserve(e.target)}}),{threshold:.01,rootMargin:'0px 0px 180px 0px'});
+/* IntersectionObserver is created at script load, so on a browser without it
+ * the constructor would throw and kill the whole script (blank page — the
+ * dashboard is rendered by JS). Fall back to revealing elements at once. */
+const revealObs=('IntersectionObserver' in window)?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');revealObs.unobserve(e.target)}}),{threshold:.01,rootMargin:'0px 0px 180px 0px'}):{observe(el){el.classList.add('seen')}};
 /* Paints both navigation surfaces from the nav model: the desktop sidebar (sideNav)
  * and the mobile bottom bar (bottomNav). The active view button follows state.view;
  * every button is wired to show(). Re-rendered by show() on each view switch. */
