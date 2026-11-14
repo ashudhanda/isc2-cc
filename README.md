@@ -75,7 +75,7 @@ page stays fully offline. Shape:
   is a 4-item array; `answer` is its zero-based index; `difficulty` defaults to
   `"Practice"` when omitted.
 - `flashcards` — 170 entries: `{domain, front, back}` (each front/back pair is unique — exact duplicates across domains were removed).
-- `glossary` — 144 entries: `{term, definition}`.
+- `glossary` — 144 entries: `{term, definition}`. Definitions may use inline markdown (`**bold**`, `` `code` ``) rendered by the `inline()` helper, so a related term can be emphasised inside a definition.
 - `case_study` — 10 entries: `{n, title, concept, body}` (the JavaSip story).
 
 ## Accessibility
