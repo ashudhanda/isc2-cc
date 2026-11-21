@@ -198,9 +198,11 @@ function renderQuestion(){let qs=state.quizQuestions,d=DATA.domains.find(x=>x.id
 /* Lock in the answer on first click only: the !=null guard ignores repeat clicks,
  * every option is disabled, the correct option is always marked (choice gets 'wrong'
  * when it misses), the explanation reveals and Next unhides. Session counters bump once.
+ * The marking is not visual-only: the correct option and the chosen wrong one also
+ * get an aria-label stating so (setAttribute takes the raw text, so no escaping).
  * Focus moves to Next so keyboard and screen-reader users land on the next action
  * instead of sitting on a disabled option. */
-function answerQuestion(choice){if(state.qAnswers[state.qIndex]!=null)return;let q=state.quizQuestions[state.qIndex],correct=choice===q.answer;state.qAnswers[state.qIndex]={choice,correct,difficulty:q.difficulty||'Practice'};state.sessionQuestions++;updateSession();quiz.querySelectorAll('[data-opt]').forEach((b,i)=>{b.disabled=true;if(i===q.answer)b.classList.add('correct');else if(i===choice)b.classList.add('wrong')});feedbackTitle.textContent=correct?'Correct — lock it in.':'Not quite — here’s the rule.';explain.classList.add('show');nextQ.hidden=false;nextQ.focus()}
+function answerQuestion(choice){if(state.qAnswers[state.qIndex]!=null)return;let q=state.quizQuestions[state.qIndex],correct=choice===q.answer;state.qAnswers[state.qIndex]={choice,correct,difficulty:q.difficulty||'Practice'};state.sessionQuestions++;updateSession();quiz.querySelectorAll('[data-opt]').forEach((b,i)=>{b.disabled=true;if(i===q.answer){b.classList.add('correct');b.setAttribute('aria-label',`${'ABCD'[i]}: ${q.options[i]} — correct answer`)}else if(i===choice){b.classList.add('wrong');b.setAttribute('aria-label',`${'ABCD'[i]}: ${q.options[i]} — your answer, incorrect`)}});feedbackTitle.textContent=correct?'Correct — lock it in.':'Not quite — here’s the rule.';explain.classList.add('show');nextQ.hidden=false;nextQ.focus()}
 /* Summarizes the finished quiz: score ring with the pass/fail message,
  * correct/total counts, and a per-difficulty breakdown of the answers.
  * Focus moves to the results heading — the See results button is destroyed
