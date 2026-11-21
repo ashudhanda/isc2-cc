@@ -123,8 +123,10 @@ function addEffects(root=document){root.querySelectorAll('.spotlight').forEach(e
 const revealObs=('IntersectionObserver' in window)?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');revealObs.unobserve(e.target)}}),{threshold:.01,rootMargin:'0px 0px 180px 0px'}):{observe(el){el.classList.add('seen')}};
 /* Paints both navigation surfaces from the nav model: the desktop sidebar (sideNav)
  * and the mobile bottom bar (bottomNav). The active view button follows state.view;
- * every button is wired to show(). Re-rendered by show() on each view switch. */
-function renderNav(){sideNav.innerHTML=nav.map(([id,label,ic])=>`<button class="nav-btn ${state.view===id?'active':''}"${state.view===id?' aria-current="page"':''} data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');bottomNav.innerHTML=nav.map(([id,label,ic])=>`<button class="bottom-btn ${state.view===id?'active':''}"${state.view===id?' aria-current="page"':''} data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go))}
+ * every button is wired to show(). Re-rendered by show() on each view switch.
+ * A domain detail view counts as Home (its back link reads "All domains"), so
+ * Home stays marked current there — otherwise no button would be active at all. */
+function renderNav(){let active=state.view==='domain'?'dashboard':state.view;sideNav.innerHTML=nav.map(([id,label,ic])=>`<button class="nav-btn ${active===id?'active':''}"${active===id?' aria-current="page"':''} data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');bottomNav.innerHTML=nav.map(([id,label,ic])=>`<button class="bottom-btn ${active===id?'active':''}"${active===id?' aria-current="page"':''} data-go="${id}">${icons[ic]}<span>${label}</span></button>`).join('');document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go))}
 /* Switch the active view panel, repaint the nav and smooth-scroll to top; 'domain'
  * renders via openDomain (which scrolls instantly). Opening Quiz mid-session
  * resumes the current question instead of wiping it back to the picker (the
