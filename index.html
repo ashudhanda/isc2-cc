@@ -7,8 +7,7 @@
 <!-- No favicon file: the empty data: URI silences the browser's default favicon request. -->
 <link rel="icon" href="data:,">
 <meta name="description" content="Free interactive study companion for the ISC2 CC (Certified in Cybersecurity) exam: concise notes, 125 practice questions, 169 flashcards, a 144-term glossary and a case study. Single self-contained file, works offline.">
-<meta name="theme-color" content="#f4f7fb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#07101f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f7fb">
 <meta property="og:title" content="CC Study Website">
 <meta property="og:description" content="Interactive study companion for the ISC2 CC (Certified in Cybersecurity) exam: notes, practice questions, flashcards, glossary and case study.">
 <meta property="og:type" content="website">
@@ -68,8 +67,9 @@ const themeIcons={sun:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="1
  * over the OS/device preference, and every toggle persists the new choice.
  * setTheme() toggles the data-theme attribute on <html> and keeps the toggle
  * accessible by updating its icon, visible label, aria-label and aria-pressed
- * state on every switch. */
-function setTheme(theme){document.documentElement.dataset.theme=theme;const dark=theme==='dark';themeToggle.innerHTML=`${themeIcons[dark?'sun':'moon']}<span>${dark?'Light':'Dark'}</span>`;themeToggle.setAttribute('aria-label',`Switch to ${dark?'light':'dark'} mode`);themeToggle.setAttribute('aria-pressed',String(dark))}
+ * state on every switch. It also keeps the theme-color meta in sync, so the
+ * browser chrome follows the manual choice instead of the OS preference. */
+function setTheme(theme){document.documentElement.dataset.theme=theme;const dark=theme==='dark';themeToggle.innerHTML=`${themeIcons[dark?'sun':'moon']}<span>${dark?'Light':'Dark'}</span>`;themeToggle.setAttribute('aria-label',`Switch to ${dark?'light':'dark'} mode`);themeToggle.setAttribute('aria-pressed',String(dark));let tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.setAttribute('content',dark?'#07101f':'#f4f7fb')}
 /* First paint: a stored theme choice wins; otherwise the OS/device preference
  * decides. The toggle persists each switch so the choice survives reloads. */
 function loadTheme(){try{let s=localStorage.getItem('cc-theme');if(s==='dark'||s==='light')return s}catch(e){}return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
