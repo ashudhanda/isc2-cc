@@ -5,9 +5,9 @@ Interactive study website for the **ISC2 CC (Certified in Cybersecurity)** exam.
 ## What's inside
 
 - **5 domain sections** — concise notes + 25 practice questions each (125 total)
-- **Flashcards** — 170 cards with 3D flip animation, shuffle, and domain filters
+- **Flashcards** — 169 cards with 3D flip animation, shuffle, and domain filters
 - **Quiz mode** — instant answer feedback with explanations, score summary
-- **Glossary** — 144 terms with live search
+- **Glossary** — 144 terms with live search (debounced, so typing doesn't re-render the list on every keystroke)
 - **Case study** — 10-part JavaSip story mapped to security concepts
 - **Quick study shortcuts** — the dashboard jumps straight into flashcards, quiz, glossary, or the JavaSip story
 - **Light/dark mode toggle** (follows device theme, choice remembered) with React Bits-inspired animations
@@ -41,19 +41,21 @@ lower gets "Review, recall, retry."
 A session pill in the top bar tracks your session live (the desktop sidebar
 holds the same progress as a card with a bar): every flipped flashcard
 is counted as studied, and every answered quiz question bumps the question
-count. The bar shows both together as a share of all 170 cards + 125
+count. The bar shows both together as a share of all 169 cards + 125
 questions, so you always know how deep into a session you are.
 
 ## How it's built
 
 - **Single self-contained `index.html`** — all study content (notes, 125 quiz
-  questions, 170 flashcards, 144 glossary terms) lives in one embedded data
+  questions, 169 flashcards, 144 glossary terms) lives in one embedded data
   block; there is no build step and no backend.
 - **Vanilla JS + CSS custom properties** — views render from a tiny `state`
   object (`view` / `domain` / `domainTab` pick the panel; `show()` and
   `openDomain()` do the switching; `updateSession` repaints the session
   pill); theming is pure CSS variables with a manual light/dark override
-  on top of the OS preference. The theme choice is stored in `localStorage`
+  on top of the OS preference. The `theme-color` meta is updated on every
+  toggle, so the browser chrome follows the manual choice instead of the OS
+  preference. The theme choice is stored in `localStorage`
   (guarded, so private mode just falls back to the OS preference); the
   session progress still resets on reload, so each visit starts fresh.
 - **Fonts degrade gracefully** — DM Sans / Manrope load from Google Fonts when
@@ -75,7 +77,7 @@ page stays fully offline. Shape:
 - `questions` — `{stem, options, answer, explanation, difficulty}`. `options`
   is a 4-item array; `answer` is its zero-based index; `difficulty` defaults to
   `"Practice"` when omitted.
-- `flashcards` — 170 entries: `{domain, front, back}` (each front/back pair is unique — exact duplicates across domains were removed).
+- `flashcards` — 169 entries: `{domain, front, back}` (each front/back pair is unique — exact duplicates across domains were removed).
 - `glossary` — 144 entries: `{term, definition}`. Definitions may use inline markdown (`**bold**`, `` `code` ``) rendered by the `inline()` helper, so a related term can be emphasised inside a definition.
 - `case_study` — 10 entries: `{n, title, concept, body}` (the JavaSip story).
 
