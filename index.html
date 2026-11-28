@@ -167,8 +167,11 @@ function renderDashboard(){let title='Master the CC exam. One sharp session at a
 function animateCounts(){if(mq('(prefers-reduced-motion: reduce)')){document.querySelectorAll('[data-count]').forEach(el=>{el.textContent=el.dataset.count});return}document.querySelectorAll('[data-count]').forEach(el=>{let n=+el.dataset.count,start=performance.now(),dur=900;function t(now){let p=Math.min(1,(now-start)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(n*e);if(p<1)requestAnimationFrame(t)}requestAnimationFrame(t)})}
 /* Open a domain's detail view on the notes or quiz tab, then scroll to top.
  * Focus moves to the domain heading, like show() does for the other views:
- * without it, focus stays on the dashboard tile that just disappeared. */
-function openDomain(id,tab='notes'){state.domain=id;state.domainTab=tab;state.view='domain';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='domain'));renderNav();renderDomain();let h=domain.querySelector('h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}scrollTop()}
+ * without it, focus stays on the dashboard tile that just disappeared.
+ * On the quiz tab the heading focus is skipped: startQuiz() already focused
+ * the first question, and pulling focus back to the domain heading would
+ * make keyboard users tab through the page to reach the question. */
+function openDomain(id,tab='notes'){state.domain=id;state.domainTab=tab;state.view='domain';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='domain'));renderNav();renderDomain();if(tab==='notes'){let h=domain.querySelector('h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}scrollTop()}
 /* Paints the open domain's header with its Notes/Quiz tabs; the notes tab
  * renders the domain markdown plus an auto-built table of contents from
  * its h2 headings, the quiz tab starts a new quiz session. The quiz start
