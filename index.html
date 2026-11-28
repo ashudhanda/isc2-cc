@@ -137,11 +137,14 @@ function renderNav(){let active=state.view==='domain'?'dashboard':state.view;sid
  * resumes the current question instead of wiping it back to the picker (the
  * picker only shows when no quiz is in progress, e.g. after Exit clears it).
  * Focus moves to the new view's heading so keyboard and screen-reader users
- * land on the content, not on the nav button they just left. */
+ * land on the content, not on the nav button they just left.
+ * Glossary is the exception: renderGlossary() focuses the search field on
+ * fine-pointer devices, and the heading focus here would undo it — so the
+ * heading focus is skipped for that view. */
 /* Scroll to top, honoring prefers-reduced-motion: users who asked for
  * reduced motion get an instant jump instead of a smooth scroll. */
 function scrollTop(){window.scrollTo({top:0,behavior:mq('(prefers-reduced-motion: reduce)')?'auto':'smooth'})}
-function show(id){state.view=id;document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));renderNav();if(id==='dashboard')renderDashboard();if(id==='flashcards')renderFlashcards();if(id==='quiz'){if(state.quizQuestions.length&&state.qIndex<state.quizQuestions.length)renderQuestion();else renderQuizPicker()}if(id==='glossary')renderGlossary();if(id==='case')renderCase();scrollTop();let h=document.querySelector('#'+id+' h1')||document.querySelector('#'+id+' h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}
+function show(id){state.view=id;document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));renderNav();if(id==='dashboard')renderDashboard();if(id==='flashcards')renderFlashcards();if(id==='quiz'){if(state.quizQuestions.length&&state.qIndex<state.quizQuestions.length)renderQuestion();else renderQuizPicker()}if(id==='glossary')renderGlossary();if(id==='case')renderCase();scrollTop();if(id!=='glossary'){let h=document.querySelector('#'+id+' h1')||document.querySelector('#'+id+' h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}}
 /* Refresh the sidebar session pill: flipped cards count as studied, answered quiz
  * questions count toward 125; the bar shows both as a share of all cards + questions. */
 function updateSession(){railMeta.textContent=`${state.studied.size} cards · ${state.sessionQuestions} questions`;let total=DATA.flashcards.length+DATA.domains.reduce((n,d)=>n+d.questions.length,0),pct=((state.studied.size+state.sessionQuestions)/total)*100;railBar.style.width=Math.min(100,pct)+'%';railBar.setAttribute('aria-valuemax',total);railBar.setAttribute('aria-valuenow',Math.round(state.studied.size+state.sessionQuestions));railProgress.textContent=(state.studied.size||state.sessionQuestions)?'Session in progress':'Start a study session';sessionText.textContent=(state.studied.size||state.sessionQuestions)?`${state.studied.size} cards studied · ${state.sessionQuestions} answered`:'Session ready'}
