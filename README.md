@@ -100,6 +100,14 @@ page stays fully offline. Shape:
   with zero results is announced instead of silently emptying the list.
 - Switching views moves keyboard focus to the new view's heading, so keyboard
   and screen-reader users land on the content instead of staying on the nav button.
+  Glossary is the exception: the search field takes focus on fine-pointer devices,
+  so typing can start at once.
+- Re-activating a domain's Notes tab keeps focus on the tab itself (the repaint
+  destroys the button just used), and opening a domain on its Quiz tab leaves
+  focus on the first question instead of pulling it back to the domain heading.
+- The domain notes no longer repeat the domain name as a second h1 — the page
+  header already names the domain — and quiz picker names are spans, not headings
+  inside buttons (a heading is not valid button content).
 - Focus follows the content everywhere a repaint destroys the control just used:
   opening a domain focuses its heading; starting a quiz and moving to the next
   question focus the question heading; exiting a quiz focuses the picker heading;
